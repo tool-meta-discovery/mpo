@@ -1,0 +1,32 @@
+<mat-card-header>
+  <mat-card-title>Optimization Object #{{ rank }}</mat-card-title>
+  <mat-card-subtitle
+    >Best model within optimization object found in iteration {{
+      bestIterationIndex + 1
+    }}.</mat-card-subtitle
+  >
+</mat-card-header>
+<app-model
+  [model]="bestIteration.model"
+  [pnmlDownloadUrl]="bestIteration.pnml_download_url"
+  [bpmnDownloadUrl]="bestIteration.bpmn_download_url"
+></app-model>
+<div class="rowSep"></div>
+<div fxLayout="row" fxLayout.lt-lg="row wrap" fxLayoutGap="20px grid">
+  <app-quality-radar
+    *ngIf="qualityMeasureCount >= 3"
+    fxFlex="1 1 25"
+    fxFlex.lt-lg="1 1 auto"
+    [qualities]="bestIteration.quality"
+  ></app-quality-radar>
+  <app-parameter-table
+    fxFlex="2 1 35%"
+    fxFlex.lt-lg="1 1 auto"
+    [iteration]="bestIteration"
+  ></app-parameter-table>
+  <app-history
+    fxFlex="2 1 40%"
+    fxFlex.lt-lg="1 1 auto"
+    [optimizationObject]="optimizationObject"
+  ></app-history>
+</div>

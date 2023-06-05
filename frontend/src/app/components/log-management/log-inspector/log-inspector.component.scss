@@ -1,0 +1,14 @@
+.table-container {
+  overflow: auto;
+}
+.mat-column {
+  flex: none;
+  width: 100px;
+}
+
+::ng-deep th.mat-header-cell,
+::ng-deep td.mat-cell,
+::ng-deep td.mat-footer-cell {
+  padding: 0 8px;
+  text-align: start;
+}

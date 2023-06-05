@@ -1,0 +1,93 @@
+<h1>Optimization Constraints</h1>
+<p *ngIf="selectedEventLogSubject | async">
+  Event-Log: <strong>{{ (selectedEventLogSubject | async)!.name }}</strong>
+</p>
+
+<mat-stepper linear>
+  <mat-step
+    label="Trace Filter"
+    [completed]="
+      traceFilters.stageObjectsForm.valid
+    "
+  >
+    <app-trace-filter #traceFilters></app-trace-filter>
+  </mat-step>
+  <mat-step
+    label="Event Filter"
+    [completed]="
+      eventFilters.stageObjectsForm.valid
+    "
+  >
+    <app-event-filter #eventFilters></app-event-filter>
+  </mat-step>
+  <mat-step
+    label="Discovery Algorithm"
+    [completed]="
+      discoveryAlgorithms.stageObjectsForm.valid
+    "
+  >
+    <app-discovery-algorithm #discoveryAlgorithms></app-discovery-algorithm>
+  </mat-step>
+  <mat-step
+    label="Quality Measure"
+    [completed]="
+      qualityMeasures.stageObjectsForm.valid
+    "
+  >
+    <app-quality-measure #qualityMeasures></app-quality-measure>
+  </mat-step>
+  <mat-step label="Start Optimization">
+    <div fxLayout="column" style="max-width: 500px">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <label>Maximum Optimization Time (Minutes):</label>
+        <label
+          ><strong>
+            {{ optimizationLimitMinutes }}
+          </strong></label
+        >
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon color="primary">timer</mat-icon>
+        <mat-slider
+          [max]="60 * 10"
+          min="10"
+          step="10"
+          thumbLabel="true"
+          color="primary"
+          [(ngModel)]="optimizationLimitMinutes"
+        ></mat-slider>
+      </div>
+      <p>
+        Note: The Optimization will finish its current iteration for the batch
+        leading to the limit not being treated strictly but more loosely.
+      </p>
+    </div>
+
+    <ng-container *ngIf="loading">
+      <p style="text-align: center">Setting up Optimization</p>
+      <mat-spinner style="margin: 0 auto"></mat-spinner>
+    </ng-container>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <button
+        class="controlButton"
+        mat-stroked-button
+        color="primary"
+        type="button"
+        matStepperPrevious
+        [disabled]="loading"
+      >
+        Back
+      </button>
+      <button
+        mat-raised-button
+        id="start"
+        (click)="onStart()"
+        color="primary"
+        [disabled]="loading"
+      >
+        Start Optimization
+      </button>
+    </div>
+  </mat-step>
+</mat-stepper>

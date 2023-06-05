@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  backend:
+    image: ldietrich/mpo-backend
+    restart: always
+    environment:
+      - FLASK_ENV=production
+    ports:
+      - 5000:8080
+    expose:
+      - "5000"
+
+  frontend:
+    image: ldietrich/mpo-frontend
+    restart: always
+    ports:
+      - 80:80
+    expose:
+      - "80"

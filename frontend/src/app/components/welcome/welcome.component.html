@@ -1,0 +1,13 @@
+<h1>Welcome. This is the Meta Parameter Optimizer...</h1>
+<h2>About</h2>
+<p>
+  The MPO is a designated tool for finding optimal discovery algorithms and
+  preprocessing techniques and their corresponding parameters.
+</p>
+
+<mat-divider></mat-divider>
+<h2>Get Started</h2>
+
+<app-log-management></app-log-management>
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+<p class="errorMessage" *ngIf="errMsg">Error: {{ errMsg | json }}</p>

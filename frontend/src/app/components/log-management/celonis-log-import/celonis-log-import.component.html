@@ -1,0 +1,148 @@
+<h1 mat-dialog-title>Import a Celonis Data Model</h1>
+<p>
+  To be able to import Event-Logs from your Celonis Data Models we need an API
+  key.
+</p>
+<p>This key needs atleast the following permissions:</p>
+<ul>
+  <li>Use all Data Models</li>
+  <li>Manage all Data Pools</li>
+</ul>
+<p>
+  For more informations on how API keys are generated go checkout the
+  <a href="https://docs.celonis.com/en/application-keys.html"
+    >Celonis Documentation</a
+  >.
+</p>
+<p>
+  <strong>Note:</strong>
+  If you don't like entering your API credentials each and every time you can
+  store them for future imports. However we can not guarantee that other users
+  might exploit this to access your Celonis Data Models. We decided to let you
+  store the credentials in your <u>Browser Cookies</u> and give you the control
+  and responsability to delete your cookies if you share this browser with
+  others or expect Cross-Site Cookie attacks.
+</p>
+<mat-divider> </mat-divider>
+<h2>Specify API Credentials</h2>
+
+<form [formGroup]="celonisCredentialsForm">
+  <div formGroupName="apiCredentials" fxLayout="column">
+    <mat-form-field>
+      <mat-label>Celonis Workspace URL</mat-label>
+      <input
+        matInput
+        placeholder="https://myworkspace.server.celonis.cloud"
+        formControlName="celonis_url"
+      />
+    </mat-form-field>
+    <ng-container
+      *ngIf="celonisCredentialsForm.get('apiCredentials.celonis_url') as url"
+    >
+      <ng-container *ngIf="(url.dirty || url.touched) && url.errors">
+        <ng-container *ngIf="url.errors as errors">
+          <p class="errorMessage" *ngIf="errors['pattern']">
+            The specified URL is invalid.
+          </p>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <mat-form-field>
+      <mat-label> Application Key</mat-label>
+      <input
+        matInput
+        placeholder="Your Application Key"
+        formControlName="celonis_key"
+      />
+    </mat-form-field>
+    <ng-container
+      *ngIf="celonisCredentialsForm.get('apiCredentials.celonis_key') as key"
+    >
+      <ng-container *ngIf="(key.dirty || key.touched) && key.errors">
+        <ng-container *ngIf="key.errors as errors">
+          <p class="errorMessage" *ngIf="errors['exactLength']">
+            The Application needs to have a length of
+            {{ errors["exactLength"].requiredLength }}
+            but has
+            {{ errors["exactLength"].actualLength }}.
+          </p>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <mat-checkbox color="primary" formControlName="is_user_key"
+      >Is User Key</mat-checkbox
+    >
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <mat-checkbox formControlName="saveToCookies" color="warn">
+      Save API Credentials in Cookies</mat-checkbox
+    >
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      [disabled]="
+        celonisCredentialsForm.invalid || fetchingModels || importingModel
+      "
+      (click)="onFetch()"
+    >
+      Fetch Models
+    </button>
+  </div>
+</form>
+
+<mat-divider> </mat-divider>
+
+<mat-progress-bar *ngIf="fetchingModels" mode="indeterminate">
+</mat-progress-bar>
+
+<h2>Select Celonis Data Model</h2>
+
+<form [formGroup]="celonisModelSelectionForm">
+  <div fxLayout="row" fxLayoutAlign="center">
+    <mat-form-field appearance="fill">
+      <mat-label>Celonis Data Model</mat-label>
+      <mat-select
+        placeholder="None"
+        formControlName="model"
+        [disabled]="
+          !(availableCelonisModelsSubject | async) ||
+          (availableCelonisModelsSubject | async)?.length == 0
+        "
+      >
+        <mat-option
+          *ngFor="let model of availableCelonisModelsSubject | async"
+          [value]="model"
+        >
+          {{ model }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</form>
+
+<mat-divider> </mat-divider>
+
+<mat-progress-bar *ngIf="importingModel" mode="indeterminate">
+</mat-progress-bar>
+
+<div mat-dialog-actions align="center">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      celonisModelSelectionForm.invalid ||
+      celonisCredentialsForm.invalid ||
+      fetchingModels ||
+      importingModel
+    "
+    (click)="onImport()"
+  >
+    Import
+  </button>
+  <button mat-button mat-dialog-close [disabled]="importingModel">
+    Cancel
+  </button>
+</div>

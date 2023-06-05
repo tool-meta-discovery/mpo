@@ -1,0 +1,74 @@
+<p>Click on an Event-Log to find an optimized model</p>
+<table mat-table #table [dataSource]="eventLogsSubject">
+  <mat-text-column name="name"></mat-text-column>
+  <mat-text-column name="cases" headerText="Cases"></mat-text-column>
+  <mat-text-column name="events" headerText="Events"></mat-text-column>
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Created</th>
+    <td mat-cell *matCellDef="let log">
+      {{ log.date.format("MMM Do, YYYYY, H:mm:ss") }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let log">
+      <button mat-icon-button (click)="onLogPreview(log)">
+        <mat-icon>preview</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onLogDelete(log)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+  <tr
+    mat-row
+    class="logRow"
+    (click)="onLogClicked(log)"
+    [class.selectedLogRow]="selectedLog?.name == log.name"
+    *matRowDef="let log; columns: displayedColumns"
+  ></tr>
+  <tr class="mat-row" *matNoDataRow id="noDataRow">
+    <td class="mat-cell" colspan="4">No Event-Logs imported yet</td>
+  </tr>
+</table>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loadingSubject | async"
+></mat-progress-bar>
+
+<div class="event-log-control-bar">
+  <button
+    mat-raised-button
+    (click)="onLogSelect()"
+    [disabled]="!selectedLog || selectingEventLog"
+    color="primary"
+  >
+    Select Event-Log
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onLocalUploadClick()"
+    color="primary"
+    [disabled]="selectingEventLog"
+  >
+    Upload local Event-Log
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onCelonisImportClick()"
+    color="primary"
+    [disabled]="selectingEventLog"
+  >
+    <mat-icon svgIcon="celonis"></mat-icon>
+    Import Event-Log from Celonis
+  </button>
+</div>
+
+<ng-container *ngIf="selectingEventLog">
+  <mat-spinner style="margin: 0 auto"></mat-spinner>
+  <p style="text-align: center">Selecting Event-Log</p>
+</ng-container>

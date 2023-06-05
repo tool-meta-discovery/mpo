@@ -1,0 +1,109 @@
+<h1>{{ stageName }}</h1>
+<ng-container *ngIf="(loadingSubject | async);else params">
+  <p style="text-align: center">Initalizing Parameters</p>
+  <mat-spinner style="margin: 0 auto"></mat-spinner>
+</ng-container>
+<ng-template #params>
+  <form (ngSubmit)="onSubmit()" [formGroup]="stageObjectsForm">
+    <button
+      class="selectionButton"
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="selectAll()"
+    >
+      Select All
+    </button>
+    <button
+      class="selectionButton"
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="unselectAll()"
+    >
+      Unselect All
+    </button>
+    <div formArrayName="stageObjects">
+      <mat-accordion #accordion>
+        <div
+          *ngFor="
+      let stageObject of originalStageObjects;
+      let stageObjectIndex = index
+      "
+          [formGroupName]="stageObjectIndex"
+        >
+          <mat-expansion-panel
+            #panel
+            [disabled]="!stageObjectsFormArray.at(stageObjectIndex).value.selected"
+            [ngClass]="
+{'invalid' : stageObjectsFormArray.at(stageObjectIndex).invalid}"
+          >
+            <mat-expansion-panel-header
+              collapsedHeight="100px"
+              expandedHeight="100px"
+            >
+              <mat-panel-title>
+                <mat-checkbox
+                  color="primary"
+                  formControlName="selected"
+                  (change)="onCheck($event, panel)"
+                  (click)="$event.stopPropagation()"
+                  (keydown)="$event.stopPropagation()"
+                >
+                </mat-checkbox>
+
+                {{stageObject.name}}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{stageObject.description}}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p
+              *ngIf="stageObject.parameters.length == 0;else dynamicStageObjectForm"
+            >
+              There are no parameters for the this object.
+            </p>
+            <ng-template #dynamicStageObjectForm>
+              <div formArrayName="parameters">
+                <div
+                  *ngFor="
+              let parameter of stageObject.parameters;
+              let parameterIndex = index"
+                >
+                  <!-- [formGroupName]="parameterIndex" -->
+                  <app-dynamic-form-parameter
+                    [parameter]="parameter"
+                    [form]="parameterForm(stageObjectIndex, parameterIndex)"
+                    (parameterUpdate)="onParameterUpdate($event, stageObjectIndex, parameterIndex)"
+                  ></app-dynamic-form-parameter>
+                </div>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </div>
+      </mat-accordion>
+    </div>
+
+    <div fxLayout="row-reverse" fxLayoutAlign="space-between center">
+      <button
+        class="controlButton"
+        mat-raised-button
+        color="primary"
+        matStepperNext
+        [disabled]="!stageObjectsForm.valid"
+      >
+        Next
+      </button>
+      <button
+        class="controlButton"
+        mat-stroked-button
+        color="primary"
+        type="button"
+        matStepperPrevious
+        *ngIf="!hideBackButton"
+      >
+        Back
+      </button>
+    </div>
+  </form>
+</ng-template>

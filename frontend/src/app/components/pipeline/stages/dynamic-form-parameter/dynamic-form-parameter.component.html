@@ -1,0 +1,104 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ parameter.name }}</mat-card-title>
+    <mat-card-subtitle>{{ parameter.description }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div [formGroup]="form">
+      <ng-container
+        *ngIf="
+          parameter.type == 'integral' ||
+          parameter.type == 'numeric' ||
+          parameter.type == 'datetime'
+        "
+      >
+        <div [ngSwitch]="parameter.controlType">
+          <ng-container *ngSwitchCase="'datetimepicker'">
+            <mat-form-field class="example-form-field" appearance="fill">
+              <mat-label>Allowed Date Range</mat-label>
+              <mat-date-range-input [rangePicker]="intervalPicker">
+                <input
+                  matStartDate
+                  placeholder="Start date"
+                  formControlName="minValue"
+                />
+                <input
+                  matEndDate
+                  placeholder="End date"
+                  formControlName="maxValue"
+                />
+              </mat-date-range-input>
+              <mat-hint>DD.MM.YYYY – DD.MM.YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="intervalPicker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #intervalPicker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Initial Date</mat-label>
+              <input
+                matInput
+                [min]="form.controls['minValue'].value"
+                [max]="form.controls['maxValue'].value"
+                [matDatepicker]="picker"
+                formControlName="startValue"
+              />
+              <mat-hint>DD.MM.YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'number-textbox'">
+            <mat-form-field appearance="fill">
+              <mat-label>Initial Value</mat-label>
+              <input type="number" matInput formControlName="startValue" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Lower Bound</mat-label>
+              <input type="number" matInput formControlName="minValue" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Upper Bound</mat-label>
+              <input type="number" matInput formControlName="maxValue" />
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="parameter.type == 'selection'">
+        <mat-form-field appearance="fill">
+          <mat-label>Allowed Values</mat-label>
+          <mat-select formControlName="selectionSet" multiple>
+            <mat-option
+              *ngFor="let value of maximalSelectionSet"
+              [value]="value"
+            >
+              {{ value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Initial Value</mat-label>
+          <mat-select formControlName="startValue">
+            <mat-option
+              *ngFor="let value of form.value['selectionSet']"
+              [value]="value"
+            >
+              {{ value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+      <div class="errorMessage" *ngIf="!isValid">
+        {{ form.value.name }} is invalid.
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

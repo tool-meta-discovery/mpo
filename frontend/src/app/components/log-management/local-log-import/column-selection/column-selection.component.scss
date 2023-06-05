@@ -1,0 +1,16 @@
+form {
+  padding: 20px;
+}
+div#column-selection {
+  display: flex;
+  gap: 5px;
+}
+p.errorMessage {
+  text-align: center;
+}
+#loadingIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0px;
+}

@@ -1,0 +1,9 @@
+<app-top-bar (settingsToggle)="drawer.toggle()"></app-top-bar>
+<mat-drawer-container>
+  <mat-drawer mode="over" position="end" #drawer class="settings"
+    ><app-settings></app-settings
+  ></mat-drawer>
+  <mat-drawer-content class="main">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

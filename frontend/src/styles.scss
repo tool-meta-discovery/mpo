@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+@use "./styles/themes/light";
+
+@include mat.core();
+
+@include mat.core-theme(light.$my-app-light-theme);
+@include mat.all-component-themes(light.$my-app-light-theme);
+
+$color-config: mat.get-color-config(light.$my-app-light-theme);
+$warn-palette: map-get($color-config, "warn");
+$primary-palette: map-get($color-config, "primary");
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+p.errorMessage {
+  color: mat.get-color-from-palette($warn-palette, 700);
+}
+.error-snackbar {
+  background: mat.get-color-from-palette($warn-palette, 700);
+  color: white;
+}
+
+.error-snackbar button {
+  background: mat.get-color-from-palette($warn-palette, 900);
+  color: white;
+}
+
+.highlight {
+  background-color: mat.get-color-from-palette($primary-palette, 200);
+}

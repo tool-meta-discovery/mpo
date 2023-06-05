@@ -1,0 +1,14 @@
+<div>
+  <span>{{ file?.name || "Select a file" }}</span>
+  <input type="file" [accept]="acceptedType" #fileInput hidden />
+  <button
+    mat-mini-fab
+    color="primary"
+    class="upload-btn"
+    type="button"
+    (click)="fileInput.click()"
+    [disabled]="disabled"
+  >
+    <mat-icon>attach_file</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,17 @@
+name: mpo
+channels:
+  - defaults
+dependencies:
+  - python=3.9.12
+  - pip=21.2.4
+  - flask=2.0.3
+  - flask_cors=3.0.10
+  - requests=2.27.1
+  - pip:
+      - --extra-index-url https://pypi.celonis.cloud/
+      - bson==0.5.10
+      - flask-session==0.4.0
+      - pandas==1.4.2
+      - pm4py==2.2.21
+      - pycelonis==1.7.0
+      - waitress==2.1.2

@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Add a local Event-Log</h1>
+<mat-stepper linear #stepper>
+  <mat-step label="Select File" completed="false">
+    <app-log-upload #logUpload [stepper]="stepper"></app-log-upload>
+  </mat-step>
+  <mat-step label="Specify Columns">
+    <app-column-selection
+      #columnSelection
+      [loading]="loading"
+    ></app-column-selection>
+    <button
+      mat-raised-button
+      matStepperPrevious
+      [disabled]="columnSelection.loading"
+    >
+      Back
+    </button>
+  </mat-step>
+</mat-stepper>
+<mat-divider></mat-divider>
+<div mat-dialog-actions align="center">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      columnSelection.columnSelectionForm.invalid || columnSelection.loading
+    "
+    (click)="onImport()"
+  >
+    Import
+  </button>
+  <button mat-button mat-dialog-close>Cancel</button>
+</div>

@@ -1,0 +1,10 @@
+mat-drawer-container {
+  height: calc(100% - 64px);
+}
+.main {
+  padding: 0px 100px;
+}
+mat-drawer.settings {
+  width: 30%;
+  min-width: 400px;
+}

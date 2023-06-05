@@ -1,0 +1,67 @@
+<p [hidden]="(eventLogColumnsSubject | async)?.length" class="errorMessage">
+  No columns could have been retrieved
+</p>
+<form [formGroup]="columnSelectionForm" (ngSubmit)="onSubmit()">
+  <div id="column-selection">
+    <mat-form-field appearance="fill">
+      <mat-label>Case Column</mat-label>
+      <mat-select
+        placeholder="None"
+        formControlName="case"
+        [disabled]="(eventLogColumnsSubject | async)?.length == 0"
+      >
+        <mat-option
+          *ngFor="let column of eventLogColumnsSubject | async"
+          [value]="column"
+        >
+          {{ column }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Timestamp Column</mat-label>
+      <mat-select
+        placeholder="None"
+        formControlName="time"
+        [disabled]="(eventLogColumnsSubject | async)?.length == 0"
+      >
+        <mat-option
+          *ngFor="let column of eventLogColumnsSubject | async"
+          [value]="column"
+        >
+          {{ column }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Activity Column</mat-label>
+      <mat-select
+        placeholder="None"
+        formControlName="activity"
+        [disabled]="(eventLogColumnsSubject | async)?.length == 0"
+      >
+        <mat-option
+          *ngFor="let column of eventLogColumnsSubject | async"
+          [value]="column"
+        >
+          {{ column }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <p
+    class="errorMessage"
+    *ngIf="
+      columnSelectionForm.errors &&
+      columnSelectionForm.errors['exclusiveSelection']
+    "
+  >
+    All Columns have to be mutually exclusive.
+  </p>
+</form>
+<div *ngIf="loading" id="loadingIndicator">
+  <p>Importing Log</p>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

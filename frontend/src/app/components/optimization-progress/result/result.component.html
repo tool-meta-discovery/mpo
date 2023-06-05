@@ -1,0 +1,29 @@
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="fetchingResultsSubject | async"
+></mat-progress-bar>
+<h1>Results</h1>
+<ng-container
+  *ngIf="
+    (optimizationObjectsSubject | async) &&
+      (optimizationObjectsSubject | async)!.length > 0;
+    else noResults
+  "
+>
+  <div fxLayout="column" fxLayoutGap="50px">
+    <mat-card
+      *ngFor="
+        let optimizationObject of optimizationObjectsSubject | async;
+        index as index
+      "
+    >
+      <app-optimization-object
+        [optimizationObject]="optimizationObject"
+        [rank]="index + 1"
+      ></app-optimization-object>
+    </mat-card>
+  </div>
+</ng-container>
+<ng-template #noResults>
+  <p>No results yet.</p>
+</ng-template>
